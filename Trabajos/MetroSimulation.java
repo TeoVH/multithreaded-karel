@@ -25,7 +25,7 @@ class Racer extends Robot {
     }
 }
 
-public class Trains implements Directions {
+public class MetroSimulation implements Directions {
     public static void main(String [] args) {
         // Read the world Metro Medellín
         World.readWorld("MetroMed.kwld");

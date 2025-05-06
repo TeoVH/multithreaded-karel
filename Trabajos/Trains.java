@@ -2,6 +2,12 @@ import kareltherobot.*;
 import java.awt.Color;
 
 class Racer extends Robot { 
+    public Racer(int Street, int Avenue, Direction direction, int beeps, Color color) {
+        super(Street, Avenue, direction, beeps, color);
+        World.setupThread(this);
+    }
+    
+    // Overloaded constructor with optional color (default is Color.RED)
     public Racer(int Street, int Avenue, Direction direction, int beeps) {
         super(Street, Avenue, direction, beeps);
         World.setupThread(this);
@@ -26,6 +32,6 @@ public class Trains implements Directions {
         World.setVisible(true);
 
         Racer first = new Racer(35, 1, West, 0);
-        Racer second = new Racer(35, 2, West, 0);
+        Racer second = new Racer(35, 2, West, 0, Color.BLUE);
     }
 }

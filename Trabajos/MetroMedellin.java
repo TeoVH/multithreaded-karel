@@ -366,9 +366,15 @@ public class MetroMedellin implements Directions {
         Thread hiloSanJavier = new Thread(trenSanJavier);
 
         hiloNiquia.start();
-        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        try { T
+            Thread.sleep(1000); 
+        } catch (InterruptedException e){}
+        
         hiloEstrella.start();
-        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        try { 
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {}
+        
         hiloSanJavier.start();
     }
 }

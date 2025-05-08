@@ -1,3 +1,3 @@
-java -cp ".;KarelJRobot.jar" MetroSimulation
-pause
+java -cp ".;KarelJRobot.jar" MetroMedellin
+pause 
 exit

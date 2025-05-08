@@ -1,3 +1,3 @@
-javac -d . -cp ".;KarelJRobot.jar" MetroSimulation.java
+javac -d . -cp ".;KarelJRobot.jar" MetroMedellin.java
 pause
 exit

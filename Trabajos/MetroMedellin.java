@@ -15,6 +15,7 @@ public class MetroMedellin implements Directions {
 
     // Variables para controlar el recorrido de los trenes
     public static CyclicBarrier barreraInicio;
+    public static CyclicBarrier barreraSanJavier;
     public static boolean inicioRecorridos = false;
     public static final Object inicioLock = new Object();
 
@@ -47,24 +48,20 @@ public class MetroMedellin implements Directions {
                 Rutas.IrAEstrella(this);
             } else if (destino.equals("SanJavier")) {
                 Rutas.IrASanJavier(this);
+                // Espera a que todos los trenes de San Javier lleguen
+                if (trenId == 23) {
+                    try {
+                        MetroMedellin.barreraSanJavier.await();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
-            // Sincronización para arrancar todos juntos
-            if (esTrenLider()) {
-                try {
-                    MetroMedellin.barreraInicio.await();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                synchronized (MetroMedellin.inicioLock) {
-                    MetroMedellin.inicioRecorridos = true;
-                    MetroMedellin.inicioLock.notifyAll();
-                }
-            } else {
-                synchronized (MetroMedellin.inicioLock) {
-                    while (!MetroMedellin.inicioRecorridos) {
-                        try { MetroMedellin.inicioLock.wait(); } catch (InterruptedException e) { e.printStackTrace(); }
-                    }
+            // TODOS los trenes esperan la señal global
+            synchronized (MetroMedellin.inicioLock) {
+                while (!MetroMedellin.inicioRecorridos) {
+                    try { MetroMedellin.inicioLock.wait(); } catch (InterruptedException e) { e.printStackTrace(); }
                 }
             }
 

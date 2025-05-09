@@ -9,12 +9,22 @@ public class Main {
     static {
         World.readWorld("MetroMedellin.kwld");
         World.setVisible(true);
-        World.setDelay(10);
+        World.setDelay(1);
     }
 
     public static void main(String[] args) {
 
         MetroMedellin.barreraInicio = new CyclicBarrier(3);
+
+        // Barrera para sincronizar trenes que van a San Javier
+        MetroMedellin.barreraSanJavier = new CyclicBarrier(1, () -> {
+            // Cuando todos los trenes llegan a San Javier, se ejecuta este bloque
+            synchronized (MetroMedellin.inicioLock) {
+                MetroMedellin.inicioRecorridos = true;
+                MetroMedellin.inicioLock.notifyAll();
+            }
+        });
+
         List<Thread> hilos = new ArrayList<>();
         int trenId = 1;
         

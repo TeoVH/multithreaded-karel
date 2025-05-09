@@ -6,8 +6,8 @@ public class MetroMedellin implements Directions {
     static class Tren extends Robot implements Runnable {
         private String destino;
 
-        public Tren(int street, int avenue, Direction direction, int beeps, String destino, Color color) {
-            super(street, avenue, direction, beeps);
+        public Tren(int street, int avenue, Direction direction, int beeps, Color color, String destino) {
+            super(street, avenue, direction, beeps, color);
             this.destino = destino;
             World.setupThread(this);
         }
@@ -20,13 +20,13 @@ public class MetroMedellin implements Directions {
             // Lógica específica por destino
             if (destino.equals("Niquia")) {
                 IrANiquia();
-                rutaNiquia();
+                // rutaNiquia();
             } else if (destino.equals("Estrella")) {
                 IrAEstrella();
-                rutaEstrella();
+                // rutaEstrella();
             } else if (destino.equals("SanJavier")) {
                 IrASanJavier();
-                rutaSanJavier();
+                // rutaSanJavier();
             }
         }
 
@@ -352,21 +352,25 @@ public class MetroMedellin implements Directions {
         }
     }
 
-    public static void main(String[] args) {
+    // World configuration
+    static {
         World.readWorld("MetroMedellin.kwld");
         World.setVisible(true);
         World.setDelay(10);
+    }
 
-        Tren trenNiquia = new Tren(32, 15, East, 0, "Niquia", Color.RED);
-        Tren trenEstrella = new Tren(32, 14, East, 0, "Estrella", Color.BLUE);
-        Tren trenSanJavier = new Tren(33, 14, South, 0, "SanJavier", Color.GREEN);
+    public static void main(String[] args) {
+
+        Tren trenNiquia = new Tren(34, 6, East, 0, Color.red, "Niquia");
+        Tren trenEstrella = new Tren(32, 14, East, 0, Color.blue, "Estrella");
+        Tren trenSanJavier = new Tren(33, 14, South, 0, Color.green, "SanJavier");
 
         Thread hiloNiquia = new Thread(trenNiquia);
         Thread hiloEstrella = new Thread(trenEstrella);
         Thread hiloSanJavier = new Thread(trenSanJavier);
 
         hiloNiquia.start();
-        try { T
+        try {
             Thread.sleep(1000); 
         } catch (InterruptedException e){}
         

@@ -1,5 +1,6 @@
 import kareltherobot.*;
 import java.awt.Color;
+import java.util.concurrent.CyclicBarrier;
 
 public class MetroMedellin implements Directions {
 
@@ -11,6 +12,11 @@ public class MetroMedellin implements Directions {
     // Matriz de ocupación de trenes: 0 = vacío, > 0 = trenId
     public static int[][] ocupacion = new int[calle+1][avenida+1];
     public static final Object lock = new Object();
+
+    // Variables para controlar el recorrido de los trenes
+    public static CyclicBarrier barreraInicio;
+    public static boolean inicioRecorridos = false;
+    public static final Object inicioLock = new Object();
 
     public static class Tren extends Robot implements Runnable {
         private String destino;
@@ -32,17 +38,42 @@ public class MetroMedellin implements Directions {
         @Override
         public void run() {
             System.out.println("Tren " + trenId + " creado en calle " + posCalle + " y avenida " + posAvenida);
-            navegarHastaSalida();
 
-            // Lógica de rutas delegada a clase Rutas
+            // Salida del taller hasta la estación extrema según destino
+            navegarHastaSalida();
             if (destino.equals("Niquia")) {
                 Rutas.IrANiquia(this);
-                // Rutas.rutaNiquia(this);
             } else if (destino.equals("Estrella")) {
                 Rutas.IrAEstrella(this);
-                // Rutas.rutaEstrella(this);
             } else if (destino.equals("SanJavier")) {
                 Rutas.IrASanJavier(this);
+            }
+
+            // Sincronización para arrancar todos juntos
+            if (esTrenLider()) {
+                try {
+                    MetroMedellin.barreraInicio.await();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                synchronized (MetroMedellin.inicioLock) {
+                    MetroMedellin.inicioRecorridos = true;
+                    MetroMedellin.inicioLock.notifyAll();
+                }
+            } else {
+                synchronized (MetroMedellin.inicioLock) {
+                    while (!MetroMedellin.inicioRecorridos) {
+                        try { MetroMedellin.inicioLock.wait(); } catch (InterruptedException e) { e.printStackTrace(); }
+                    }
+                }
+            }
+
+            // Inicio del recorrido principal
+            if (destino.equals("Niquia")) {
+                Rutas.rutaNiquia(this);
+            } else if (destino.equals("Estrella")) {
+                Rutas.rutaEstrella(this);
+            } else if (destino.equals("SanJavier")) {
                 // Rutas.rutaSanJavier(this);
             }
         }
@@ -124,6 +155,12 @@ public class MetroMedellin implements Directions {
 
             // Mueve el robot físicamente
             move();
+        }
+
+        // Método para identificar tren líder (ajusta la lógica según tu inicialización)
+        public boolean esTrenLider() {
+            // Primeros trenes creados para cada destino
+            return trenId == 1 || trenId == 8 || trenId == 23;
         }
     }
 }

@@ -2,17 +2,19 @@ import kareltherobot.*;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CyclicBarrier;
 
 public class Main {
     // World configuration
     static {
         World.readWorld("MetroMedellin.kwld");
         World.setVisible(true);
-        World.setDelay(1);
+        World.setDelay(10);
     }
 
     public static void main(String[] args) {
 
+        MetroMedellin.barreraInicio = new CyclicBarrier(3);
         List<Thread> hilos = new ArrayList<>();
         int trenId = 1;
         

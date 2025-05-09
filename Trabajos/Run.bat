@@ -1,3 +1,4 @@
-java -cp ".;KarelJRobot.jar" MetroMedellin
-pause 
+@echo off
+java -cp ".;KarelJRobot.jar" Main
+pause
 exit

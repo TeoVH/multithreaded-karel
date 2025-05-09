@@ -16,30 +16,35 @@ public class MetroMedellin implements Directions {
         private String destino;
         private Color color;
         private int trenId;
+        private int posCalle;
+        private int posAvenida;
 
         public Tren(int trenId, int street, int avenue, Direction direction, int beeps, Color color, String destino) {
             super(street, avenue, direction, beeps, color);
             this.trenId = trenId;
             this.destino = destino;
             this.color = color;
+            this.posCalle = street;
+            this.posAvenida = avenue;
             World.setupThread(this);
         }
 
         @Override
         public void run() {
+            System.out.println("Tren " + trenId + " creado en calle " + posCalle + " y avenida " + posAvenida);
             navegarHastaSalida();
 
-            // Lógica de rutas delegada a clase Rutas
-            if (destino.equals("Niquia")) {
-                Rutas.IrANiquia(this);
-                // Rutas.rutaNiquia(this);
-            } else if (destino.equals("Estrella")) {
-                Rutas.IrAEstrella(this);
-                Rutas.rutaEstrella(this);
-            } else if (destino.equals("SanJavier")) {
-                Rutas.IrASanJavier(this);
-                Rutas.rutaSanJavier(this);
-            }
+            // // Lógica de rutas delegada a clase Rutas
+            // if (destino.equals("Niquia")) {
+            //     Rutas.IrANiquia(this);
+            //     // Rutas.rutaNiquia(this);
+            // } else if (destino.equals("Estrella")) {
+            //     Rutas.IrAEstrella(this);
+            //     // Rutas.rutaEstrella(this);
+            // } else if (destino.equals("SanJavier")) {
+            //     Rutas.IrASanJavier(this);
+            //     // Rutas.rutaSanJavier(this);
+            // }
         }
 
         // Métodos auxiliares
@@ -59,24 +64,30 @@ public class MetroMedellin implements Directions {
                 if (leftIsClear()) {
                     turnLeft();
                     if (frontIsClear()) {
-                        move();
+                        moveSafe();
                     }
                 } else if (frontIsClear()) {
-                    move();
+                    moveSafe();
                 } else {
                     turnRight();
                 }
             }
         }
+        
 
         public int getTrenId() {
             return trenId;
         }
 
         public static boolean reservarPosicion(int trenId, int calle, int avenida) {
+            if (calle < 1 || calle > 36 || avenida < 1 || avenida > 21) {
+                System.out.println("Intento de reservar fuera de límites: (" + calle + ", " + avenida + ")");
+                return false;
+            }
             synchronized (lock) {
                 if (ocupacion[calle][avenida] == 0) {
                     ocupacion[calle][avenida] = trenId;
+                    System.out.println("Tren " + trenId + " reservó posición (" + calle + ", " + avenida + ")");
                     return true;
                 }
                 return false;
@@ -90,35 +101,29 @@ public class MetroMedellin implements Directions {
         }
 
         public void moveSafe() {
-            int nextCalle = this.street();
-            int nextAvenida = this.avenue();
+            int nextCalle = posCalle;
+            int nextAvenida = posAvenida;
 
-            // Calulamos la siguiente posición según la dirección actual
-            if (facingNorth()) {
-                nextCalle--;
-            } else if (facingSouth()) {
-                nextCalle++;
-            } else if (facingEast()) {
-                nextAvenida++;
-            } else if (facingWest()) {
-                nextAvenida--;
+            // Calcula la siguiente posición
+            if (facingNorth()) nextCalle++;
+            else if (facingSouth()) nextCalle--;
+            else if (facingEast()) nextAvenida++;
+            else if (facingWest()) nextAvenida--;
+
+            // Espera hasta que la posición esté libre y la reserva
+            while (!Tren.reservarPosicion(this.trenId, nextCalle, nextAvenida)) {
+                try { Thread.sleep(50); } catch (InterruptedException e) { e.printStackTrace(); }
             }
 
-            // Verificamos si la posición siguiente está ocupada y la reservamos
-            while (!MetroMedellin.reservarPosicion(this.trenId, nextCalle, nextAvenida)) {
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+            // Libera la posición actual
+            Tren.liberarPosicion(posCalle, posAvenida);
 
-            // Liberamos la posición actual
-            MetroMedellin.liberarPosicion(this.street(), this.avenue());
+            // Actualiza la posición interna
+            posCalle = nextCalle;
+            posAvenida = nextAvenida;
 
-            // Movemos el tren a la nueva posición
-            this.move();
-
+            // Mueve el robot físicamente
+            move();
         }
     }
 }

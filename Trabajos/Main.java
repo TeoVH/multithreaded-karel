@@ -8,7 +8,7 @@ public class Main {
     static {
         World.readWorld("MetroMedellin.kwld");
         World.setVisible(true);
-        World.setDelay(10);
+        World.setDelay(3);
     }
 
     public static void main(String[] args) {
@@ -17,7 +17,7 @@ public class Main {
         int trenId = 1;
         
         // 7 trenes a Niquia
-        hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 32, 15, Directions.East, 0, Color.RED, "Niquia")));
+        hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 32, 15, Directions.West, 0, Color.RED, "Niquia")));
 
         for (int i = 0; i < 3; i++) {
             hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 32 + i, 14, Directions.South, 0, Color.RED, "Niquia")));
@@ -41,14 +41,14 @@ public class Main {
             hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 35, 6 + i, Directions.West, 0, Color.GREEN, "SanJavier")));
         }
 
-        // for (Thread hilo : hilos) {
-        //     hilo.start();
-        //     try {
-        //         Thread.sleep(500);
-        //     } catch (InterruptedException e) {
-        //         e.printStackTrace();
-        //     }
-        // }
+        for (Thread hilo : hilos) {
+            hilo.start();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         
         
 

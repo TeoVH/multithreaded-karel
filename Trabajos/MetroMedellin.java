@@ -3,326 +3,33 @@ import java.awt.Color;
 
 public class MetroMedellin implements Directions {
 
-    static class Tren extends Robot implements Runnable {
+    public static class Tren extends Robot implements Runnable {
         private String destino;
+        private Color color;
 
         public Tren(int street, int avenue, Direction direction, int beeps, Color color, String destino) {
             super(street, avenue, direction, beeps, color);
             this.destino = destino;
+            this.color = color;
             World.setupThread(this);
         }
 
         @Override
         public void run() {
-            // Primera etapa: salir del taller hasta (32,16)
             navegarHastaSalida();
 
-            // Lógica específica por destino
+            // Lógica de rutas delegada a clase Rutas
             if (destino.equals("Niquia")) {
-                IrANiquia();
-                // rutaNiquia();
+                Rutas.IrANiquia(this);
+                Rutas.rutaNiquia(this);
             } else if (destino.equals("Estrella")) {
-                IrAEstrella();
-                // rutaEstrella();
+                Rutas.IrAEstrella(this);
+                Rutas.rutaEstrella(this);
             } else if (destino.equals("SanJavier")) {
-                IrASanJavier();
-                // rutaSanJavier();
+                Rutas.IrASanJavier(this);
+                Rutas.rutaSanJavier(this);
             }
         }
-
-
-        public void IrANiquia() {
-            move(); 
-            turnLeft();
-            move(); move();
-            turnRight();
-            move(); move(); move();
-            turnLeft();
-            move();
-            turnLeft();
-            move();
-        }
-        
-        public void rutaNiquia() {
-            move(); move(); move();
-            turnLeft();
-            move(); move(); move(); move(); move(); move();                
-            turnRight(); 
-            move(); 
-            turnLeft(); 
-            move(); move(); move(); 
-            turnRight(); 
-            move(); move(); 
-            turnLeft(); 
-            move(); move(); move();
-            turnRight(); 
-            move(); move(); 
-            turnLeft(); 
-            move(); move(); move(); move(); move(); 
-            turnLeft();                           
-            move(); move(); move(); move(); move(); 
-            turnRight();                          
-            move(); move(); move(); move(); move(); move(); move(); 
-            turnRight();                          
-            move(); move(); move();               
-            turnLeft();                           
-            move(); move(); move(); move(); move(); move(); 
-            turnRight();                          
-            move();                               
-            turnLeft();                           
-            move(); move(); move();               
-            turnRight();                          
-            move(); move();                       
-            turnLeft();                           
-            move();                               
-            turnLeft();                           
-            move();                            
-            move(); move();                        
-            turnLeft();                            
-            move(); move(); move();               
-            turnRight();                           
-            move();                                
-            turnLeft();                            
-            move(); move(); move(); move(); move(); move();  
-            turnRight();                           
-            move(); move(); move();                
-            turnLeft();                            
-            move(); move(); move(); move(); move(); move(); move(); move(); move(); 
-            turnLeft();                            
-            move(); move(); move(); move(); move(); 
-            turnRight();                           
-            move(); move(); move();                
-            turnRight();                           
-            move(); move();                        
-            turnLeft();                            
-            move(); move(); move();                
-            turnRight();                           
-            move(); move();                        
-            turnLeft();                            
-            move(); move(); move();                
-            turnRight();                           
-            move();                                
-            turnLeft();                            
-            move(); move(); move(); move();        
-                
-            move(); move();
-            turnRight();
-            move(); move(); move();
-            turnLeft();
-            move();
-            turnLeft();
-            move();
-        }
-        
-        public void IrAEstrella() {
-            move(); move();
-            turnRight();
-            move(); move(); move();
-            turnRight();
-            move();
-            turnLeft();
-            move(); move(); move();
-            turnRight();
-            move(); move();
-            turnLeft();
-            move(); move(); move(); 
-            turnRight();
-            move(); move();
-            turnLeft();
-            move(); move(); move(); move(); move(); 
-            turnLeft();                           
-            move(); move(); move(); move(); move(); 
-            turnRight();                          
-            move(); move(); move(); move(); move(); move(); move(); 
-            turnRight();                          
-            move(); move(); move();               
-            turnLeft();                           
-            move(); move(); move(); move(); move(); move(); 
-            turnRight();                          
-            move();                               
-            turnLeft();                           
-            move(); move(); move();               
-            turnRight();                          
-            move(); move();                       
-            turnLeft();                           
-            move();                               
-            turnLeft();                           
-            move();                               
-        }
-        
-        public void rutaEstrella() {
-            move(); move();                        
-            turnLeft();                            
-            move(); move(); move();               
-            turnRight();                           
-            move();                                
-            turnLeft();                            
-            move(); move(); move(); move(); move(); move();  
-            turnRight();                           
-            move(); move(); move();                
-            turnLeft();                            
-            move(); move(); move(); move(); move(); move(); move(); move(); move(); 
-            turnLeft();                            
-            move(); move(); move(); move(); move(); 
-            turnRight();                           
-            move(); move(); move();                
-            turnRight();                           
-            move(); move();                        
-            turnLeft();                            
-            move(); move(); move();                
-            turnRight();                           
-            move(); move();                        
-            turnLeft();                            
-            move(); move(); move();                
-            turnRight();                           
-            move();                                
-            turnLeft();                            
-            move(); move(); move(); move();        
-                
-            move(); move();
-            turnRight();
-            move(); move(); move();
-            turnLeft();
-            move();
-            turnLeft();
-            move();
-            move(); move(); move();               
-            turnLeft();                           
-            move(); move(); move();
-            move(); move(); move (); 
-            turnRight();
-            move();
-            turnLeft();
-            move(); move(); move();
-            turnRight();
-            move(); move();
-            turnLeft();
-            move(); move(); move(); 
-            turnRight();
-            move(); move();
-            turnLeft();
-            move(); move(); move(); move(); move(); 
-            turnLeft();                           
-            move(); move(); move(); move(); move(); 
-            turnRight();                          
-            move(); move(); move(); move(); move(); move(); move(); 
-            turnRight();                          
-            move(); move(); move();               
-            turnLeft();                           
-            move(); move(); move(); move(); move(); move(); 
-            turnRight();                          
-            move();                               
-            turnLeft();                           
-            move(); move(); move();               
-            turnRight();                          
-            move(); move();                       
-            turnLeft();                           
-            move();                               
-            turnLeft();                           
-            move();   
-        }
-        
-        public void IrASanJavier() {
-            turnRight();
-            move(); move(); move();
-            turnRight();
-            move();
-            turnLeft();
-            move(); move(); move();
-            turnRight();
-            move(); move();
-            turnLeft();
-            move(); move(); move(); 
-            turnRight();
-            move(); move();
-            turnLeft();
-            move(); move(); move(); move(); move(); 
-            move(); move(); move(); move();
-            turnRight();
-            move(); move(); move(); move();
-            turnRight();
-            move();
-            turnLeft();
-            move(); move(); move(); move(); move();
-            turnRight();
-            move(); move();
-            turnLeft();
-            move();
-            turnLeft();
-            move();
-        }
-
-        public void rutaSanJavier() {
-            move(); move();
-            turnLeft();
-            move(); move(); move(); move(); move();
-            turnRight();
-            move();
-            turnLeft();
-            move(); move(); move(); move(); move(); move(); move(); move();
-            turnLeft();
-            move();
-            turnRight();
-            move();
-            turnLeft(); turnLeft();
-            move(); move(); move(); move();
-            turnRight();
-            move(); move(); move(); move();
-            turnRight();
-            move();
-            turnLeft();
-            move(); move(); move(); move();
-            turnRight();
-            move(); move();
-            turnLeft();
-            move(); move(); move();
-            turnRight();
-            move(); move();
-            turnLeft();
-            move(); move(); move();
-            turnRight();
-            move();
-            turnLeft();
-            move(); move(); move(); move();
-            move(); move();
-            turnRight();
-            move(); move(); move();
-            turnLeft();
-            move();
-            turnLeft();
-            move();
-            move(); move(); move();
-            turnLeft();
-            move(); move(); move();
-            move(); move(); move();
-            turnRight();
-            move();
-            turnLeft();
-            move(); move(); move();
-            turnRight();
-            move(); move();
-            turnLeft();
-            move(); move(); move();
-            turnRight();
-            move(); move();
-            turnLeft();
-            move(); move(); move(); move(); move();
-            move(); move(); move(); move();
-            turnRight();
-            move(); move(); move(); move();
-            turnRight();
-            move();
-            turnLeft();
-            move(); move(); move(); move(); move();
-            turnRight();
-            move(); move();
-            turnLeft();
-            move();
-            turnLeft();
-            move();
-        }
-        
-        
 
         // Métodos auxiliares
         public void turnRight() {
@@ -330,12 +37,12 @@ public class MetroMedellin implements Directions {
         }
 
         public boolean leftIsClear() {
-            turnLeft(); // Gira a la izquierda
-            boolean isClear = frontIsClear(); // Verifica si el frente está libre
-            turnRight(); // Gira a la derecha para volver a la posición original
-            return isClear; // Devuelve el resultado de si el frente está libre
+            turnLeft();
+            boolean isClear = frontIsClear();
+            turnRight();
+            return isClear;
         }
-        
+
         public void navegarHastaSalida() {
             while (!(leftIsClear() && frontIsClear())) {
                 if (leftIsClear()) {

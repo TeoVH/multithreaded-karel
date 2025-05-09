@@ -34,17 +34,17 @@ public class MetroMedellin implements Directions {
             System.out.println("Tren " + trenId + " creado en calle " + posCalle + " y avenida " + posAvenida);
             navegarHastaSalida();
 
-            // // Lógica de rutas delegada a clase Rutas
-            // if (destino.equals("Niquia")) {
-            //     Rutas.IrANiquia(this);
-            //     // Rutas.rutaNiquia(this);
-            // } else if (destino.equals("Estrella")) {
-            //     Rutas.IrAEstrella(this);
-            //     // Rutas.rutaEstrella(this);
-            // } else if (destino.equals("SanJavier")) {
-            //     Rutas.IrASanJavier(this);
-            //     // Rutas.rutaSanJavier(this);
-            // }
+            // Lógica de rutas delegada a clase Rutas
+            if (destino.equals("Niquia")) {
+                Rutas.IrANiquia(this);
+                // Rutas.rutaNiquia(this);
+            } else if (destino.equals("Estrella")) {
+                Rutas.IrAEstrella(this);
+                // Rutas.rutaEstrella(this);
+            } else if (destino.equals("SanJavier")) {
+                Rutas.IrASanJavier(this);
+                // Rutas.rutaSanJavier(this);
+            }
         }
 
         // Métodos auxiliares
@@ -81,7 +81,7 @@ public class MetroMedellin implements Directions {
 
         public static boolean reservarPosicion(int trenId, int calle, int avenida) {
             if (calle < 1 || calle > 36 || avenida < 1 || avenida > 21) {
-                System.out.println("Intento de reservar fuera de límites: (" + calle + ", " + avenida + ")");
+                System.out.println("Intento de reservar de " + trenId + " fuera de límites: (" + calle + ", " + avenida + ")");
                 return false;
             }
             synchronized (lock) {

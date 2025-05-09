@@ -83,7 +83,7 @@ public class Rutas {
     }
 
     public static void IrAEstrella(MetroMedellin.Tren t) {
-        t.moveSafe(); t.moveSafe();
+
         t.turnRight();
         t.moveSafe(); t.moveSafe(); t.moveSafe();
         t.turnRight();

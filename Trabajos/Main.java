@@ -8,7 +8,7 @@ public class Main {
     static {
         World.readWorld("MetroMedellin.kwld");
         World.setVisible(true);
-        World.setDelay(5);
+        World.setDelay(1);
     }
 
     public static void main(String[] args) {

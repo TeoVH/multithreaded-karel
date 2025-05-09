@@ -9,21 +9,12 @@ public class Main {
     static {
         World.readWorld("MetroMedellin.kwld");
         World.setVisible(true);
-        World.setDelay(1);
+        World.setDelay(15);
     }
 
     public static void main(String[] args) {
 
         MetroMedellin.barreraInicio = new CyclicBarrier(3);
-
-        // Barrera para sincronizar trenes que van a San Javier
-        MetroMedellin.barreraSanJavier = new CyclicBarrier(1, () -> {
-            // Cuando todos los trenes llegan a San Javier, se ejecuta este bloque
-            synchronized (MetroMedellin.inicioLock) {
-                MetroMedellin.inicioRecorridos = true;
-                MetroMedellin.inicioLock.notifyAll();
-            }
-        });
 
         List<Thread> hilos = new ArrayList<>();
         int trenId = 1;
@@ -54,7 +45,7 @@ public class Main {
         for (int i = 0; i < 9; i++) {
             hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 35, 6 + i, Directions.West, 0, Color.GREEN, "SanJavier")));
         }
-
+        
         hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 35, 15, Directions.North, 0, Color.GREEN, "SanJavier")));
 
 
@@ -66,31 +57,5 @@ public class Main {
                 e.printStackTrace();
             }
         }
-        
-        
-
-        // MetroMedellin.Tren trenNiquia = new MetroMedellin.Tren(35, 12, Directions.West, 0, Color.RED, "Estrella");
-        // MetroMedellin.Tren trenEstrella = new MetroMedellin.Tren(34, 1, Directions.East, 0, Color.BLUE, "Estrella");
-        // MetroMedellin.Tren trenSanJavier = new MetroMedellin.Tren(34, 7, Directions.East, 0, Color.GREEN, "Estrella");
-
-        // Thread hiloNiquia = new Thread(trenNiquia);
-        // Thread hiloEstrella = new Thread(trenEstrella);
-        // Thread hiloSanJavier = new Thread(trenSanJavier);
-
-        // hiloNiquia.start();
-        // try {
-        //     Thread.sleep(1000);
-        // } catch (InterruptedException e) {
-        //     e.printStackTrace();
-        // }
-
-        // hiloEstrella.start();
-        // try {
-        //     Thread.sleep(1000);
-        // } catch (InterruptedException e) {
-        //     e.printStackTrace();
-        // }
-
-        // hiloSanJavier.start();
     }
 }

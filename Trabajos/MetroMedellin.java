@@ -3,6 +3,15 @@ import java.awt.Color;
 
 public class MetroMedellin implements Directions {
 
+    // Matriz 2D para representar el mundo y conocer qué trenes están en cada posición
+    // Tamaño del mundo
+    public static final int avenida = 21;
+    public static final int calle = 36;
+
+    // Matriz de ocupación de trenes: 0 = vacío, > 0 = trenId
+    public static int[][] ocupacion = new int[calle+1][avenida+1];
+    public static final Object lock = new Object();
+
     public static class Tren extends Robot implements Runnable {
         private String destino;
         private Color color;
@@ -62,6 +71,54 @@ public class MetroMedellin implements Directions {
 
         public int getTrenId() {
             return trenId;
+        }
+
+        public static boolean reservarPosicion(int trenId, int calle, int avenida) {
+            synchronized (lock) {
+                if (ocupacion[calle][avenida] == 0) {
+                    ocupacion[calle][avenida] = trenId;
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public static void liberarPosicion(int calle, int avenida) {
+            synchronized (lock) {
+                ocupacion[calle][avenida] = 0;
+            }
+        }
+
+        public void moveSafe() {
+            int nextCalle = this.street();
+            int nextAvenida = this.avenue();
+
+            // Calulamos la siguiente posición según la dirección actual
+            if (facingNorth()) {
+                nextCalle--;
+            } else if (facingSouth()) {
+                nextCalle++;
+            } else if (facingEast()) {
+                nextAvenida++;
+            } else if (facingWest()) {
+                nextAvenida--;
+            }
+
+            // Verificamos si la posición siguiente está ocupada y la reservamos
+            while (!MetroMedellin.reservarPosicion(this.trenId, nextCalle, nextAvenida)) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Liberamos la posición actual
+            MetroMedellin.liberarPosicion(this.street(), this.avenue());
+
+            // Movemos el tren a la nueva posición
+            this.move();
+
         }
     }
 }

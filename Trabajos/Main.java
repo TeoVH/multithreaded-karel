@@ -8,7 +8,7 @@ public class Main {
     static {
         World.readWorld("MetroMedellin.kwld");
         World.setVisible(true);
-        World.setDelay(1);
+        World.setDelay(10);
     }
 
     public static void main(String[] args) {
@@ -24,7 +24,7 @@ public class Main {
         }
 
         for (int i = 0; i < 3; i++) {
-            hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 34, (11 + i), Directions.West, 0, Color.RED, "Niquia")));
+            hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 34, (11 + i), Directions.East, 0, Color.RED, "Niquia")));
         }
 
         // 15 trenes a Estrella

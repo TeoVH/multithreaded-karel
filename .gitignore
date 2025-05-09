@@ -1,0 +1,21 @@
+# Archivos compilados
+*.class
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de IDEs
+.vscode/
+.idea/
+*.iml
+
+# Archivos temporales de Java
+*.log
+
+# Scripts de Windows (opcional: bórralo si quieres incluir los .bat)
+*.bat
+
+# Directorios de salida
+/bin/
+/out/

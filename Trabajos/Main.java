@@ -20,33 +20,33 @@ public class Main {
         int trenId = 1;
         
         // 7 trenes a Niquia
-        hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 32, 15, Directions.East, 0, Color.RED, "Niquia")));
+        hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 32, 15, Directions.East, 0, Color.RED, "SanJavier")));
 
-        for (int i = 0; i < 3; i++) {
-            hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 32 + i, 14, Directions.South, 0, Color.RED, "Niquia")));
-        }
+        // for (int i = 0; i < 3; i++) {
+        //     hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 32 + i, 14, Directions.South, 0, Color.RED, "Niquia")));
+        // }
 
-        for (int i = 3; i > 0; i--) {
-            hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 34, 10+i, Directions.East, 0, Color.RED, "Niquia")));
-        }
+        // for (int i = 3; i > 0; i--) {
+        //     hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 34, 10+i, Directions.East, 0, Color.RED, "Niquia")));
+        // }
 
-        // 15 trenes a Estrella
-        for (int i = 9; i > 0; i--) {
-            hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 34, 1 + i, Directions.East, 0, Color.BLUE, "Estrella")));
-        }
+        // // 15 trenes a Estrella
+        // for (int i = 9; i > 0; i--) {
+        //     hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 34, 1 + i, Directions.East, 0, Color.BLUE, "Estrella")));
+        // }
 
-        hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 34, 1, Directions.South, 0, Color.BLUE, "Estrella")));
+        // hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 34, 1, Directions.South, 0, Color.BLUE, "Estrella")));
 
-        for (int i = 0; i < 5; i++) {
-            hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 35, 1 + i, Directions.West, 0, Color.BLUE, "Estrella")));
-        }
+        // for (int i = 0; i < 5; i++) {
+        //     hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 35, 1 + i, Directions.West, 0, Color.BLUE, "Estrella")));
+        // }
 
-        // 10 trenes a San Javier
-        for (int i = 0; i < 9; i++) {
-            hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 35, 6 + i, Directions.West, 0, Color.GREEN, "SanJavier")));
-        }
+        // // 10 trenes a San Javier
+        // for (int i = 0; i < 9; i++) {
+        //     hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 35, 6 + i, Directions.West, 0, Color.GREEN, "SanJavier")));
+        // }
         
-        hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 35, 15, Directions.North, 0, Color.GREEN, "SanJavier")));
+        // hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 35, 15, Directions.North, 0, Color.GREEN, "SanJavier")));
 
 
         // Iniciamos todos los hilos

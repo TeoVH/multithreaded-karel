@@ -106,7 +106,7 @@ public class MetroMedellin implements Directions {
                 Rutas.rutaEstrella(this);
                 Rutas.rutaEstrella(this);
             } else if (destino.equals("SanJavier")) {
-                // Rutas.rutaSanJavier(this);
+                Rutas.rutaSanJavier(this);
             }
         }
 

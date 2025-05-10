@@ -24,6 +24,33 @@ public class MetroMedellin implements Directions {
         private int trenId;
         private int posCalle;
         private int posAvenida;
+        private static final int TIEMPO_ESPERA_ESTACION = 3000; // 3 segundos en milisegundos
+
+        // Coordenadas de las estaciones
+        private static final int[][] ESTACIONES = {
+            // Linea A
+            {35, 19}, {34, 19}, // Niquía
+            {31, 16}, {31, 17},
+            {27, 15}, {27, 16},
+            {24, 13}, {24, 14},
+            {20, 11}, {20, 12},
+            {19, 14}, {18, 14},
+            {16, 16}, {16, 17},
+            {14, 16}, {14, 17},
+            {12, 16}, {12, 17},
+            {11, 15}, {10, 15},
+            {9, 13}, {9, 14},
+            {6, 13}, {6, 14},
+            {3, 12}, {3, 13},
+            {2, 11}, {1, 11}, // Estrella
+            
+            // Linea B
+            {16, 1}, {16, 2}, // San Javier
+            {15, 5}, {14, 5},
+            {14, 9}, {13, 9},
+            {14, 12}, {13, 12},
+            {14, 15} // San Antonio B
+        };
 
         public Tren(int trenId, int street, int avenue, Direction direction, int beeps, Color color, String destino) {
             super(street, avenue, direction, beeps, color);
@@ -136,6 +163,28 @@ public class MetroMedellin implements Directions {
             }
         }
 
+        private boolean esEstacion(int calle, int avenida) {
+            for (int[] estacion : ESTACIONES) {
+                if (estacion[0] == calle && estacion[1] == avenida) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void esperarEnEstacion() {
+            if (esEstacion(posCalle, posAvenida) && MetroMedellin.inicioRecorridos) {
+                System.out.println("Tren " + trenId + " detenido en estación (" + posCalle + ", " + posAvenida + ")");
+                try {
+                    // Mantenemos la posición reservada durante la espera
+                    Thread.sleep(TIEMPO_ESPERA_ESTACION);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Tren " + trenId + " continuando desde estación (" + posCalle + ", " + posAvenida + ")");
+            }
+        }
+
         public void moveSafe() {
             int nextCalle = posCalle;
             int nextAvenida = posAvenida;
@@ -149,6 +198,17 @@ public class MetroMedellin implements Directions {
             // Espera hasta que la posición esté libre y la reserva
             while (!Tren.reservarPosicion(this.trenId, nextCalle, nextAvenida)) {
                 try { Thread.sleep(50); } catch (InterruptedException e) { e.printStackTrace(); }
+            }
+
+            // Si estamos en una estación y el recorrido ha iniciado, esperamos aquí
+            if (esEstacion(posCalle, posAvenida) && MetroMedellin.inicioRecorridos) {
+                System.out.println("Tren " + trenId + " detenido en estación (" + posCalle + ", " + posAvenida + ")");
+                try {
+                    Thread.sleep(TIEMPO_ESPERA_ESTACION);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Tren " + trenId + " continuando desde estación (" + posCalle + ", " + posAvenida + ")");
             }
 
             // Libera la posición actual

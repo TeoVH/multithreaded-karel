@@ -14,7 +14,7 @@ public class MetroMedellin implements Directions {
     public static final Object lock = new Object();
 
     // Variables para controlar el recorrido de los trenes
-    public static CyclicBarrier barreraInicio;
+    // public static CyclicBarrier barreraInicio;
     public static boolean inicioRecorridos = false;
     public static final Object inicioLock = new Object();
 
@@ -51,16 +51,17 @@ public class MetroMedellin implements Directions {
 
             // Esperamos a que todos los líderes lleguen a sus estaciones
             if (esTrenLider()) {
-                try {
-                    MetroMedellin.barreraInicio.await();
-                    // Cuando todos los líderes llegan, activamos el inicio de recorridos
-                    synchronized (MetroMedellin.inicioLock) {
-                        MetroMedellin.inicioRecorridos = true;
-                        MetroMedellin.inicioLock.notifyAll();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                // try {
+                //     MetroMedellin.barreraInicio.await();
+                //     // Cuando todos los líderes llegan, activamos el inicio de recorridos
+                //     synchronized (MetroMedellin.inicioLock) {
+                //         MetroMedellin.inicioRecorridos = true;
+                //         MetroMedellin.inicioLock.notifyAll();
+                //     }
+                // } catch (Exception e) {
+                //     e.printStackTrace();
+                // }
+                System.out.println("Tren líder " + trenId + " esperando instrucción para iniciar...");
             }
 
             // TODOS los trenes esperan la señal global
@@ -73,7 +74,9 @@ public class MetroMedellin implements Directions {
             // Inicio del recorrido principal
             if (destino.equals("Niquia")) {
                 Rutas.rutaNiquia(this);
+                Rutas.rutaNiquia(this);
             } else if (destino.equals("Estrella")) {
+                Rutas.rutaEstrella(this);
                 Rutas.rutaEstrella(this);
             } else if (destino.equals("SanJavier")) {
                 // Rutas.rutaSanJavier(this);

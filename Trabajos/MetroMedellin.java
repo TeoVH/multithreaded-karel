@@ -19,6 +19,8 @@ public class MetroMedellin implements Directions {
     public static boolean esOncePM = false;
     public static final Object inicioLock = new Object();
     public static final Object oncePMLock = new Object();
+    public static final Object sanAntonioBLock = new Object();
+    public static boolean sanAntonioBOcupada = false;
 
     public static class Tren extends Robot implements Runnable {
         private String destino;
@@ -135,7 +137,7 @@ public class MetroMedellin implements Directions {
             turnRight();
             return isClear;
         }
-
+        
         public void navegarHastaSalida() {
             while (!(leftIsClear() && frontIsClear())) {
                 if (leftIsClear()) {
@@ -203,6 +205,30 @@ public class MetroMedellin implements Directions {
             else if (facingSouth()) nextCalle--;
             else if (facingEast()) nextAvenida++;
             else if (facingWest()) nextAvenida--;
+
+            // Caso especial para San Antonio B
+            // Si estamos en (13,12) y queremos ir a (13,13)
+            if (posCalle == 13 && posAvenida == 12 && nextCalle == 13 && nextAvenida == 13) {
+                synchronized (sanAntonioBLock) {
+                    while (sanAntonioBOcupada) {
+                        try {
+                            System.out.println("Tren " + trenId + " esperando en (13,12) porque San Antonio B está ocupada");
+                            sanAntonioBLock.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    sanAntonioBOcupada = true;
+                }
+            }
+
+            // Si estamos en San Antonio B y vamos a salir
+            if (posCalle == 14 && posAvenida == 15) {
+                synchronized (sanAntonioBLock) {
+                    sanAntonioBOcupada = false;
+                    sanAntonioBLock.notifyAll();
+                }
+            }
 
             // Espera hasta que la posición esté libre y la reserva
             while (!Tren.reservarPosicion(this.trenId, nextCalle, nextAvenida)) {

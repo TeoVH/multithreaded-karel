@@ -324,6 +324,11 @@ public class Rutas {
         t.turnRight();
         t.moveSafe(); t.moveSafe();
         t.navegarHastaSalida();
+        t.turnLeft();
+        t.turnLeft();
+        t.moveSafe();
+        t.turnLeft();
+        t.turnLeft();
     }
 
     public static void volverAlTallerDesdeSanJavier(MetroMedellin.Tren t) {
@@ -357,5 +362,10 @@ public class Rutas {
         t.turnRight();
         t.moveSafe(); t.moveSafe();
         t.navegarHastaSalida();
+        t.turnLeft();
+        t.turnLeft();
+        t.moveSafe();
+        t.turnLeft();
+        t.turnLeft();
     }
 }

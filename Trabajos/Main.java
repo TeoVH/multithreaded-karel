@@ -9,7 +9,7 @@ public class Main {
     static {
         World.readWorld("MetroMedellin.kwld");
         World.setVisible(true);
-        World.setDelay(1);
+        World.setDelay(10);
     }
 
     public static void main(String[] args) {

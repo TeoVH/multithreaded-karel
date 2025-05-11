@@ -9,7 +9,7 @@ public class Main {
     static {
         World.readWorld("MetroMedellin.kwld");
         World.setVisible(true);
-        World.setDelay(2);
+        World.setDelay(1);
     }
 
     public static void main(String[] args) {
@@ -62,6 +62,16 @@ public class Main {
         synchronized (MetroMedellin.inicioLock) {
             MetroMedellin.inicioRecorridos = true;
             MetroMedellin.inicioLock.notifyAll();
+        }
+
+        // Esperamos la señal de las 11 PM
+        System.out.println("\nPresione Enter cuando sean las 11 PM para finalizar la operación...");
+        new java.util.Scanner(System.in).nextLine();
+
+        // Activamos la señal de las 11 PM
+        synchronized (MetroMedellin.oncePMLock) {
+            MetroMedellin.esOncePM = true;
+            System.out.println("Se ha activado la señal de las 11 PM. Los trenes completarán su recorrido actual y finalizarán.");
         }
 
         // Esperamos a que todos los hilos terminen

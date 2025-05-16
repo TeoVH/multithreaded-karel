@@ -139,16 +139,34 @@ public class MetroMedellin implements Directions {
         }
         
         public void navegarHastaSalida() {
-            while (!(leftIsClear() && frontIsClear())) {
-                if (leftIsClear()) {
-                    turnLeft();
-                    if (frontIsClear()) {
-                        moveSafe();
-                    }
-                } else if (frontIsClear()) {
+            while (posCalle != 32 || posAvenida != 16) {
+                // Intentar moverse hacia adelante primero
+                if (frontIsClear()) {
                     moveSafe();
-                } else {
-                    turnRight();
+                    continue;
+                }
+                
+                // Si no puede ir adelante, intentar izquierda
+                turnLeft();
+                if (frontIsClear()) {
+                    moveSafe();
+                    continue;
+                }
+                
+                // Si no puede ir a la izquierda, volver a la dirección original e intentar derecha
+                turnRight();
+                turnRight();
+                if (frontIsClear()) {
+                    moveSafe();
+                    continue;
+                }
+                
+                // Si no puede ir a ningún lado, volver a la dirección original y esperar
+                turnLeft();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }

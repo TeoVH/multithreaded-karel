@@ -9,21 +9,12 @@ public class Main {
     static {
         World.readWorld("MetroMedellin.kwld");
         World.setVisible(true);
-        World.setDelay(1);
+        World.setDelay(10);
     }
 
     public static void main(String[] args) {
 
-        MetroMedellin.barreraInicio = new CyclicBarrier(3);
-
-        // Barrera para sincronizar trenes que van a San Javier
-        MetroMedellin.barreraSanJavier = new CyclicBarrier(1, () -> {
-            // Cuando todos los trenes llegan a San Javier, se ejecuta este bloque
-            synchronized (MetroMedellin.inicioLock) {
-                MetroMedellin.inicioRecorridos = true;
-                MetroMedellin.inicioLock.notifyAll();
-            }
-        });
+        // MetroMedellin.barreraInicio = new CyclicBarrier(3);
 
         List<Thread> hilos = new ArrayList<>();
         int trenId = 1;
@@ -54,43 +45,42 @@ public class Main {
         for (int i = 0; i < 9; i++) {
             hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 35, 6 + i, Directions.West, 0, Color.GREEN, "SanJavier")));
         }
-
+        
         hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 35, 15, Directions.North, 0, Color.GREEN, "SanJavier")));
 
 
+        // Iniciamos todos los hilos
         for (Thread hilo : hilos) {
             hilo.start();
+        }
+
+        // Esperamos a que el usuario presione Enter para iniciar los recorridos
+        System.out.println("\nPresione Enter para iniciar los recorridos de los trenes...");
+        new java.util.Scanner(System.in).nextLine();
+
+        // Activamos el inicio de recorridos
+        synchronized (MetroMedellin.inicioLock) {
+            MetroMedellin.inicioRecorridos = true;
+            MetroMedellin.inicioLock.notifyAll();
+        }
+
+        // Esperamos la señal de las 11 PM
+        System.out.println("\nPresione Enter cuando sean las 11 PM para finalizar la operación...");
+        new java.util.Scanner(System.in).nextLine();
+
+        // Activamos la señal de las 11 PM
+        synchronized (MetroMedellin.oncePMLock) {
+            MetroMedellin.esOncePM = true;
+            System.out.println("Se ha activado la señal de las 11 PM. Los trenes completarán su recorrido actual y finalizarán.");
+        }
+
+        // Esperamos a que todos los hilos terminen
+        for (Thread hilo : hilos) {
             try {
-                Thread.sleep(500);
+                hilo.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        
-        
-
-        // MetroMedellin.Tren trenNiquia = new MetroMedellin.Tren(35, 12, Directions.West, 0, Color.RED, "Estrella");
-        // MetroMedellin.Tren trenEstrella = new MetroMedellin.Tren(34, 1, Directions.East, 0, Color.BLUE, "Estrella");
-        // MetroMedellin.Tren trenSanJavier = new MetroMedellin.Tren(34, 7, Directions.East, 0, Color.GREEN, "Estrella");
-
-        // Thread hiloNiquia = new Thread(trenNiquia);
-        // Thread hiloEstrella = new Thread(trenEstrella);
-        // Thread hiloSanJavier = new Thread(trenSanJavier);
-
-        // hiloNiquia.start();
-        // try {
-        //     Thread.sleep(1000);
-        // } catch (InterruptedException e) {
-        //     e.printStackTrace();
-        // }
-
-        // hiloEstrella.start();
-        // try {
-        //     Thread.sleep(1000);
-        // } catch (InterruptedException e) {
-        //     e.printStackTrace();
-        // }
-
-        // hiloSanJavier.start();
     }
 }

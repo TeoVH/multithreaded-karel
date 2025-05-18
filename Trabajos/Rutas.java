@@ -1,30 +1,4 @@
 public class Rutas {
-    // Coordenadas de los cruces importantes
-    private static final int[][] CRUCES = {
-        {33, 16}, // Cruce taller
-        {18, 11}, // Entrada línea C
-        {14, 11}   // Entrada línea C
-    };
-
-    private static boolean esCruce(int calle, int avenida) {
-        for (int[] cruce : CRUCES) {
-            if (cruce[0] == calle && cruce[1] == avenida) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static void esperarEnCruce(MetroMedellin.Tren t) {
-        if (esCruce(t.getPosCalle(), t.getPosAvenida())) {
-            System.out.println("Tren " + t.getTrenId() + " esperando en cruce (" + t.getPosCalle() + ", " + t.getPosAvenida() + ")");
-            try {
-                Thread.sleep(1000); // Espera 1 segundo en el cruce
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     public static void IrANiquia(MetroMedellin.Tren t) {
         t.moveSafe();
@@ -40,7 +14,6 @@ public class Rutas {
 
     public static void rutaNiquia(MetroMedellin.Tren t) {
         t.moveSafe(); t.moveSafe(); t.moveSafe();
-        esperarEnCruce(t);
         t.turnLeft();
         t.moveSafe(); t.moveSafe(); t.moveSafe(); t.moveSafe(); t.moveSafe(); t.moveSafe();
         t.turnRight();
@@ -78,7 +51,7 @@ public class Rutas {
         if ((t.getPosCalle() == 35 && t.getPosAvenida() == 19) || (t.getPosCalle() == 1 && t.getPosAvenida() == 11)) {
             synchronized (MetroMedellin.oncePMLock) {
                 if (MetroMedellin.esOncePM) {
-                    System.out.println("Tren " + t.getTrenId() + " llegó a estación extrema y son las 11 PM. Volviendo al taller.");
+                    // System.out.println("Tren " + t.getTrenId() + " llegó a estación extrema y son las 11 PM. Volviendo al taller.");
                     t.volviendoAlTaller = true;
                     return;
                 }
@@ -184,7 +157,6 @@ public class Rutas {
         t.moveSafe();
         t.turnLeft();
         t.moveSafe(); t.moveSafe(); t.moveSafe(); t.moveSafe();
-        esperarEnCruce(t);
         t.moveSafe(); t.moveSafe();
         t.turnRight();
         t.moveSafe(); t.moveSafe(); t.moveSafe();
@@ -198,7 +170,7 @@ public class Rutas {
         if ((t.getPosCalle() == 35 && t.getPosAvenida() == 19) || (t.getPosCalle() == 1 && t.getPosAvenida() == 11)) {
             synchronized (MetroMedellin.oncePMLock) {
                 if (MetroMedellin.esOncePM) {
-                    System.out.println("Tren " + t.getTrenId() + " llegó a estación extrema y son las 11 PM. Volviendo al taller.");
+                    // System.out.println("Tren " + t.getTrenId() + " llegó a estación extrema y son las 11 PM. Volviendo al taller.");
                     t.volviendoAlTaller = true;
                     return;
                 }
@@ -283,7 +255,6 @@ public class Rutas {
         t.moveSafe();
         t.turnRight();
         t.moveSafe();
-        esperarEnCruce(t);
         // San Antonio B
         t.turnLeft(); t.turnLeft();
         t.moveSafe(); t.moveSafe(); t.moveSafe(); t.moveSafe(); t.moveSafe(); t.moveSafe(); t.moveSafe(); t.moveSafe();

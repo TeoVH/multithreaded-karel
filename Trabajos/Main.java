@@ -10,6 +10,8 @@ public class Main {
         World.readWorld("MetroMedellin.kwld");
         World.setVisible(true);
         World.setDelay(10);
+        // Desactivar mensajes de estado del robot
+        World.setTrace(false);
     }
 
     public static void main(String[] args) {
@@ -71,7 +73,7 @@ public class Main {
         // Activamos la señal de las 11 PM
         synchronized (MetroMedellin.oncePMLock) {
             MetroMedellin.esOncePM = true;
-            System.out.println("Se ha activado la señal de las 11 PM. Los trenes completarán su recorrido actual y finalizarán.");
+            // System.out.println("Se ha activado la señal de las 11 PM. Los trenes completarán su recorrido actual y finalizarán.");
         }
 
         // Esperamos a que todos los hilos terminen

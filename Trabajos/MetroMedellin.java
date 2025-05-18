@@ -29,7 +29,7 @@ public class MetroMedellin implements Directions {
         private int posCalle;
         private int posAvenida;
         private static final int TIEMPO_ESPERA_ESTACION = 3000; // 3 segundos en milisegundos
-        public boolean volviendoAlTaller = false; // Nueva variable para controlar si está volviendo al taller
+        public boolean volviendoAlTaller = false; // Variable para controlar si está volviendo al taller
 
         // Coordenadas de las estaciones
         private static final int[][] ESTACIONES = {
@@ -65,11 +65,12 @@ public class MetroMedellin implements Directions {
             this.posCalle = street;
             this.posAvenida = avenue;
             World.setupThread(this);
+            World.setDelay(10);
         }
 
         @Override
         public void run() {
-            System.out.println("Tren " + trenId + " creado en calle " + posCalle + " y avenida " + posAvenida);
+            // System.out.println("Tren " + trenId + " creado en calle " + posCalle + " y avenida " + posAvenida);
 
             // Salida del taller hasta la estación extrema según destino
             navegarHastaSalida();
@@ -89,7 +90,7 @@ public class MetroMedellin implements Directions {
             }
 
             boolean esOncePM = false;
-            
+
             // Bucle principal de recorridos hasta las 11 PM
             while (!esOncePM) {
                 // Verificar si es 11 PM antes de cada recorrido
@@ -98,7 +99,7 @@ public class MetroMedellin implements Directions {
                 }
 
                 if (esOncePM) {
-                    System.out.println("Tren " + trenId + " recibió señal de 11 PM.");
+                    // System.out.println("Tren " + trenId + " recibió señal de 11 PM.");
                     volviendoAlTaller = true;
                     break;
                 }
@@ -125,6 +126,11 @@ public class MetroMedellin implements Directions {
                 } else if (destino.equals("SanJavier")) {
                     Rutas.volverAlTallerDesdeSanJavier(this);
                 }
+            }
+
+            // Esperamos a que todos los líderes lleguen a sus estaciones
+            if (esTrenLider()) {
+                // System.out.println("Tren líder " + trenId + " esperando instrucción para iniciar...");
             }
         }
 
@@ -188,13 +194,13 @@ public class MetroMedellin implements Directions {
 
         public static boolean reservarPosicion(int trenId, int calle, int avenida) {
             if (calle < 1 || calle > 36 || avenida < 1 || avenida > 21) {
-                System.out.println("Intento de reservar de " + trenId + " fuera de límites: (" + calle + ", " + avenida + ")");
+                // System.out.println("Intento de reservar de " + trenId + " fuera de límites: (" + calle + ", " + avenida + ")");
                 return false;
             }
             synchronized (lock) {
                 if (ocupacion[calle][avenida] == 0) {
                     ocupacion[calle][avenida] = trenId;
-                    System.out.println("Tren " + trenId + " reservó posición (" + calle + ", " + avenida + ")");
+                    // System.out.println("Tren " + trenId + " reservó posición (" + calle + ", " + avenida + ")");
                     return true;
                 }
                 return false;
@@ -232,7 +238,7 @@ public class MetroMedellin implements Directions {
                 synchronized (sanAntonioBLock) {
                     while (sanAntonioBOcupada) {
                         try {
-                            System.out.println("Tren " + trenId + " esperando en (13,12) porque San Antonio B está ocupada");
+                            // System.out.println("Tren " + trenId + " esperando en (13,12) porque San Antonio B está ocupada");
                             sanAntonioBLock.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -257,13 +263,13 @@ public class MetroMedellin implements Directions {
 
             // Si estamos en una estación y el recorrido ha iniciado y NO estamos volviendo al taller, esperamos aquí
             if (esEstacion(posCalle, posAvenida) && MetroMedellin.inicioRecorridos && !volviendoAlTaller) {
-                System.out.println("Tren " + trenId + " detenido en estación (" + posCalle + ", " + posAvenida + ")");
+                // System.out.println("Tren " + trenId + " detenido en estación (" + posCalle + ", " + posAvenida + ")");
                 try {
                     Thread.sleep(TIEMPO_ESPERA_ESTACION);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.println("Tren " + trenId + " continuando desde estación (" + posCalle + ", " + posAvenida + ")");
+                // System.out.println("Tren " + trenId + " continuando desde estación (" + posCalle + ", " + posAvenida + ")");
             }
 
             // Libera la posición actual

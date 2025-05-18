@@ -71,71 +71,14 @@ public class MetroMedellin implements Directions {
         public void run() {
             System.out.println("Tren " + trenId + " creado en calle " + posCalle + " y avenida " + posAvenida);
 
-            // Verificar si es 11 PM antes de comenzar
-            synchronized (MetroMedellin.oncePMLock) {
-                if (MetroMedellin.esOncePM) {
-                    System.out.println("Tren " + trenId + " recibió señal de 11 PM antes de comenzar. Volviendo al taller.");
-                    volviendoAlTaller = true;
-                    return;
-                }
-            }
-
             // Salida del taller hasta la estación extrema según destino
-            while (!volviendoAlTaller && (posCalle != 32 || posAvenida != 16)) {
-                // Verificar si es 11 PM durante la navegación
-                synchronized (MetroMedellin.oncePMLock) {
-                    if (MetroMedellin.esOncePM) {
-                        System.out.println("Tren " + trenId + " recibió señal de 11 PM durante la navegación. Volviendo al taller.");
-                        volviendoAlTaller = true;
-                        break;
-                    }
-                }
-
-                // Intentar moverse hacia adelante primero
-                if (frontIsClear()) {
-                    moveSafe();
-                    continue;
-                }
-                
-                // Si no puede ir adelante, intentar izquierda
-                turnLeft();
-                if (frontIsClear()) {
-                    moveSafe();
-                    continue;
-                }
-                
-                // Si no puede ir a la izquierda, volver a la dirección original e intentar derecha
-                turnRight();
-                turnRight();
-                if (frontIsClear()) {
-                    moveSafe();
-                    continue;
-                }
-                
-                // Si no puede ir a ningún lado, volver a la dirección original y esperar
-                turnLeft();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (volviendoAlTaller) {
-                return;
-            }
-
+            navegarHastaSalida();
             if (destino.equals("Niquia")) {
                 Rutas.IrANiquia(this);
             } else if (destino.equals("Estrella")) {
                 Rutas.IrAEstrella(this);
             } else if (destino.equals("SanJavier")) {
                 Rutas.IrASanJavier(this);
-            }
-
-            // Esperamos a que todos los líderes lleguen a sus estaciones
-            if (esTrenLider()) {
-                System.out.println("Tren líder " + trenId + " esperando instrucción para iniciar...");
             }
 
             // TODOS los trenes esperan la señal global
@@ -146,6 +89,7 @@ public class MetroMedellin implements Directions {
             }
 
             boolean esOncePM = false;
+            
             // Bucle principal de recorridos hasta las 11 PM
             while (!esOncePM) {
                 // Verificar si es 11 PM antes de cada recorrido

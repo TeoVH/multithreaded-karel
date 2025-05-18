@@ -20,14 +20,14 @@ public class Main {
         int trenId = 1;
         
         // 7 trenes a Niquia
-        hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 32, 15, Directions.East, 0, Color.RED, "Niquia")));
+        hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 32, 15, Directions.East, 0, Color.BLUE, "Niquia")));
 
         for (int i = 0; i < 3; i++) {
-            hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 32 + i, 14, Directions.South, 0, Color.RED, "Niquia")));
+            hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 32 + i, 14, Directions.South, 0, Color.BLUE, "Niquia")));
         }
 
         for (int i = 3; i > 0; i--) {
-            hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 34, 10+i, Directions.East, 0, Color.RED, "Niquia")));
+            hilos.add(new Thread(new MetroMedellin.Tren(trenId++, 34, 10+i, Directions.East, 0, Color.BLUE, "Niquia")));
         }
 
         // 15 trenes a Estrella

@@ -73,6 +73,17 @@ public class Rutas {
         t.moveSafe();
         t.turnLeft();
         t.moveSafe();
+        // Estación Estrella
+        // Verificar si llegamos a una estación extrema y son las 11 PM
+        if ((t.getPosCalle() == 35 && t.getPosAvenida() == 19) || (t.getPosCalle() == 1 && t.getPosAvenida() == 11)) {
+            synchronized (MetroMedellin.oncePMLock) {
+                if (MetroMedellin.esOncePM) {
+                    System.out.println("Tren " + t.getTrenId() + " llegó a estación extrema y son las 11 PM. Volviendo al taller.");
+                    t.volviendoAlTaller = true;
+                    return;
+                }
+            }
+        }
         t.moveSafe(); t.moveSafe();
         t.turnLeft();
         t.moveSafe(); t.moveSafe(); t.moveSafe();
@@ -181,6 +192,18 @@ public class Rutas {
         t.moveSafe();
         t.turnLeft();
         t.moveSafe();
+        // Estación Niquia
+        
+        // Verificar si llegamos a una estación extrema y son las 11 PM
+        if ((t.getPosCalle() == 35 && t.getPosAvenida() == 19) || (t.getPosCalle() == 1 && t.getPosAvenida() == 11)) {
+            synchronized (MetroMedellin.oncePMLock) {
+                if (MetroMedellin.esOncePM) {
+                    System.out.println("Tren " + t.getTrenId() + " llegó a estación extrema y son las 11 PM. Volviendo al taller.");
+                    t.volviendoAlTaller = true;
+                    return;
+                }
+            }
+        }
         t.moveSafe(); t.moveSafe(); t.moveSafe();
         t.turnLeft();
         t.moveSafe(); t.moveSafe(); t.moveSafe();
@@ -215,6 +238,7 @@ public class Rutas {
         t.moveSafe();
         t.turnLeft();
         t.moveSafe();
+
     }
 
     public static void IrASanJavier(MetroMedellin.Tren t) {

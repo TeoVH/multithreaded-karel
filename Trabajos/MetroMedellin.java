@@ -29,7 +29,7 @@ public class MetroMedellin implements Directions {
         private int posCalle;
         private int posAvenida;
         private static final int TIEMPO_ESPERA_ESTACION = 3000; // 3 segundos en milisegundos
-        private boolean volviendoAlTaller = false; // Nueva variable para controlar si está volviendo al taller
+        public boolean volviendoAlTaller = false; // Nueva variable para controlar si está volviendo al taller
 
         // Coordenadas de las estaciones
         private static final int[][] ESTACIONES = {
@@ -71,8 +71,60 @@ public class MetroMedellin implements Directions {
         public void run() {
             System.out.println("Tren " + trenId + " creado en calle " + posCalle + " y avenida " + posAvenida);
 
+            // Verificar si es 11 PM antes de comenzar
+            synchronized (MetroMedellin.oncePMLock) {
+                if (MetroMedellin.esOncePM) {
+                    System.out.println("Tren " + trenId + " recibió señal de 11 PM antes de comenzar. Volviendo al taller.");
+                    volviendoAlTaller = true;
+                    return;
+                }
+            }
+
             // Salida del taller hasta la estación extrema según destino
-            navegarHastaSalida();
+            while (!volviendoAlTaller && (posCalle != 32 || posAvenida != 16)) {
+                // Verificar si es 11 PM durante la navegación
+                synchronized (MetroMedellin.oncePMLock) {
+                    if (MetroMedellin.esOncePM) {
+                        System.out.println("Tren " + trenId + " recibió señal de 11 PM durante la navegación. Volviendo al taller.");
+                        volviendoAlTaller = true;
+                        break;
+                    }
+                }
+
+                // Intentar moverse hacia adelante primero
+                if (frontIsClear()) {
+                    moveSafe();
+                    continue;
+                }
+                
+                // Si no puede ir adelante, intentar izquierda
+                turnLeft();
+                if (frontIsClear()) {
+                    moveSafe();
+                    continue;
+                }
+                
+                // Si no puede ir a la izquierda, volver a la dirección original e intentar derecha
+                turnRight();
+                turnRight();
+                if (frontIsClear()) {
+                    moveSafe();
+                    continue;
+                }
+                
+                // Si no puede ir a ningún lado, volver a la dirección original y esperar
+                turnLeft();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (volviendoAlTaller) {
+                return;
+            }
+
             if (destino.equals("Niquia")) {
                 Rutas.IrANiquia(this);
             } else if (destino.equals("Estrella")) {
@@ -102,26 +154,32 @@ public class MetroMedellin implements Directions {
                 }
 
                 if (esOncePM) {
-                    System.out.println("Tren " + trenId + " recibió señal de 11 PM. Volviendo al taller.");
-                    volviendoAlTaller = true; // Marcar que está volviendo al taller
-                    // Volver al taller según el destino actual
-                    if (destino.equals("Niquia")) {
-                        Rutas.volverAlTallerDesdeNiquia(this);
-                    } else if (destino.equals("Estrella")) {
-                        Rutas.volverAlTallerDesdeEstrella(this);
-                    } else if (destino.equals("SanJavier")) {
-                        Rutas.volverAlTallerDesdeSanJavier(this);
-                    }
+                    System.out.println("Tren " + trenId + " recibió señal de 11 PM.");
+                    volviendoAlTaller = true;
                     break;
                 }
 
                 // Realizar el recorrido normal según el destino
                 if (destino.equals("Niquia")) {
                     Rutas.rutaNiquia(this);
+                    if (volviendoAlTaller) break;
                 } else if (destino.equals("Estrella")) {
                     Rutas.rutaEstrella(this);
+                    if (volviendoAlTaller) break;
                 } else if (destino.equals("SanJavier")) {
                     Rutas.rutaSanJavier(this);
+                    if (volviendoAlTaller) break;
+                }
+            }
+
+            // Si debemos volver al taller, determinar la ruta según la posición actual
+            if (volviendoAlTaller) {
+                if (posCalle == 35 && posAvenida == 19) {
+                    Rutas.volverAlTallerDesdeNiquia(this);
+                } else if (posCalle == 1 && posAvenida == 11) {
+                    Rutas.volverAlTallerDesdeEstrella(this);
+                } else if (destino.equals("SanJavier")) {
+                    Rutas.volverAlTallerDesdeSanJavier(this);
                 }
             }
         }
@@ -147,15 +205,15 @@ public class MetroMedellin implements Directions {
                 }
                 
                 // Si no puede ir adelante, intentar izquierda
-                turnLeft();
-                if (frontIsClear()) {
+                    turnLeft();
+                    if (frontIsClear()) {
                     moveSafe();
                     continue;
                 }
                 
                 // Si no puede ir a la izquierda, volver a la dirección original e intentar derecha
                 turnRight();
-                turnRight();
+                    turnRight();
                 if (frontIsClear()) {
                     moveSafe();
                     continue;
